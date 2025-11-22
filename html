@@ -1,330 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sandwich Maker - The Layer Builder</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configure Tailwind for Inter font and custom colors -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary-green': '#4CAF50',
-                        'sandwich-yellow': '#FBC02D',
-                        'sandwich-red': '#D32F2F',
-                        'sandwich-brown': '#795548',
-                        'sandwich-beige': '#F5DEB3',
-                        'layer-blue': '#42A5F5',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Custom styles for the layered sandwich effect */
-        #sandwich-stack {
-            height: 400px;
-            min-width: 280px;
-            position: relative;
-            display: flex;
-            flex-direction: column-reverse; /* Stacks layers correctly from bottom up */
-            align-items: center;
-            padding-bottom: 30px; /* Space for the bottom slice */
-            transition: all 0.5s ease-in-out;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimal Sandwich Builder</title>
 
-        .layer {
-            width: 100%;
-            height: 30px; /* Base height for all layers */
-            border-radius: 10px;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            transform-origin: bottom center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-        }
-        
-        /* Adjusting layers for a subtle 3D-like stacking effect */
-        .layer:not(.top-bun, .bottom-bun) {
-            opacity: 0.9;
-            width: 90%; /* Make inner layers slightly smaller */
-        }
+<style>
+    body {
+        margin: 0;
+        background: #f4f4f4;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
 
-        /* Styling for the buns */
-        .bottom-bun {
-            width: 100%;
-            height: 40px;
-            background-color: #D2B48C; /* Tan color */
-            border-radius: 0 0 20px 20px;
-            z-index: 0; /* Keep at the very bottom */
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        }
+    header {
+        background: #4CAF50;
+        color: white;
+        padding: 20px;
+        font-size: 28px;
+        font-weight: bold;
+        text-align: center;
+    }
 
-        .top-bun {
-            width: 105%; /* Slightly wider to cap the stack */
-            height: 50px;
-            background-color: #F5DEB3; /* Lighter Tan */
-            border-radius: 25px 25px 5px 5px;
-            position: absolute;
-            top: 0;
-            z-index: 99; /* Always on top */
-            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.2);
-            transform: translateY(0); /* Initial state */
-        }
+    main {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        flex-grow: 1;
+    }
 
-        /* Button hover effect */
-        .ingredient-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+        padding: 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .sidebar h2 {
+        margin-bottom: 15px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 8px;
+        font-size: 20px;
+    }
+
+    .ingredient {
+        background: #f2f2f2;
+        padding: 10px;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+    }
+
+    .ingredient:hover {
+        background: #e8e8e8;
+    }
+
+    /* Sandwich area */
+    .sandwich-area {
+        flex-grow: 1;
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: center;
+    }
+
+    #sandwich {
+        width: 250px;
+        text-align: center;
+    }
+
+    .top-bun {
+        background: #F5DEB3;
+        height: 45px;
+        border-radius: 20px 20px 5px 5px;
+        width: 110%;
+        margin: 0 auto 10px auto;
+        box-shadow: 0 3px 5px rgba(0,0,0,0.15);
+    }
+
+    .bottom-bun {
+        background: #D2B48C;
+        height: 35px;
+        border-radius: 0 0 20px 20px;
+        width: 100%;
+        margin: 10px auto 0 auto;
+        box-shadow: 0 -3px 5px rgba(0,0,0,0.15);
+    }
+
+    .layer {
+        height: 25px;
+        width: 100%;
+        border-radius: 8px;
+        margin: 6px auto;
+        box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+    }
+
+    /* Reset button */
+    #reset {
+        margin-top: 20px;
+        padding: 10px;
+        width: 100%;
+        background: #d9534f;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    #reset:hover {
+        background: #c9302c;
+    }
+</style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col font-sans">
+<body>
 
-    <!-- Header -->
-    <header class="bg-primary-green text-white shadow-xl p-4 md:p-6">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-extrabold tracking-tight">🥪 Sandwich Builder</h1>
-            <button id="show-summary-btn" class="bg-sandwich-yellow text-primary-green font-bold py-2 px-4 rounded-lg shadow-md hover:bg-yellow-300 transition duration-300 hidden sm:block">
-                View Order
-            </button>
-        </div>
-    </header>
+<header>🥪 Sandwich Builder (Minimal JS)</header>
 
-    <main class="container mx-auto p-4 flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        
-        <!-- Ingredients Sidebar (Column 1) -->
-        <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg order-2 lg:order-1">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-3">Choose Your Layers</h2>
-            
-            <div id="ingredient-options" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3">
-                <!-- Ingredients will be dynamically generated or hardcoded here -->
-                <button data-ingredient="Lettuce" data-color="#8BC34A" class="ingredient-btn bg-gray-100 p-3 rounded-xl text-sm font-semibold shadow hover:shadow-lg transition duration-200">
-                    🥬 Lettuce
-                </button>
-                <button data-ingredient="Tomato" data-color="#E57373" class="ingredient-btn bg-gray-100 p-3 rounded-xl text-sm font-semibold shadow hover:shadow-lg transition duration-200">
-                    🍅 Tomato
-                </button>
-                <button data-ingredient="Cheese" data-color="#FFEB3B" class="ingredient-btn bg-gray-100 p-3 rounded-xl text-sm font-semibold shadow hover:shadow-lg transition duration-200">
-                    🧀 Cheese
-                </button>
-                <button data-ingredient="Turkey" data-color="#BCAAA4" class="ingredient-btn bg-gray-100 p-3 rounded-xl text-sm font-semibold shadow hover:shadow-lg transition duration-200">
-                    🦃 Turkey
-                </button>
-                <button data-ingredient="Bacon" data-color="#D50000" class="ingredient-btn bg-gray-100 p-3 rounded-xl text-sm font-semibold shadow hover:shadow-lg transition duration-200">
-                    🥓 Bacon
-                </button>
-                <button data-ingredient="Pickles" data-color="#689F38" class="ingredient-btn bg-gray-100 p-3 rounded-xl text-sm font-semibold shadow hover:shadow-lg transition duration-200">
-                    🥒 Pickles
-                </button>
-                <button data-ingredient="Mayo" data-color="#FFFCF9" class="ingredient-btn p-3 rounded-xl text-sm font-semibold shadow hover:shadow-lg transition duration-200 border border-gray-200">
-                    🥛 Mayo
-                </button>
-                <button data-ingredient="Mustard" data-color="#FFD740" class="ingredient-btn p-3 rounded-xl text-sm font-semibold shadow hover:shadow-lg transition duration-200">
-                    🍯 Mustard
-                </button>
-                <button data-ingredient="Onion" data-color="#CE93D8" class="ingredient-btn p-3 rounded-xl text-sm font-semibold shadow hover:shadow-lg transition duration-200">
-                    🧅 Onion
-                </button>
-            </div>
-            
-            <div class="mt-8 border-t pt-4">
-                <button id="reset-sandwich-btn" class="w-full bg-red-500 text-white font-bold py-3 rounded-lg shadow-md hover:bg-red-600 transition duration-300">
-                    <span class="mr-2">🔄</span> Reset Sandwich
-                </button>
-            </div>
-        </div>
+<main>
+    <!-- Ingredients Sidebar -->
+    <div class="sidebar">
+        <h2>Ingredients</h2>
 
-        <!-- Sandwich Visualizer (Column 2) -->
-        <div class="lg:col-span-2 flex justify-center items-start order-1 lg:order-2 p-6 md:p-10 bg-white rounded-xl shadow-2xl relative overflow-hidden">
-            <div class="w-full max-w-sm">
-                <h2 class="text-3xl font-extrabold text-center mb-4 text-primary-green">Your Creation</h2>
-                
-                <!-- The Sandwich Stack Container -->
-                <div id="sandwich-stack" class="w-full mx-auto relative mt-6">
-                    <!-- Dynamic Layers go here. Bottom Bun is static. -->
-                    <div id="bottom-bun" class="bottom-bun absolute"></div>
-                    <!-- Top Bun is dynamically positioned by JS -->
-                </div>
-            </div>
-            
-        </div>
-        
-    </main>
+        <div class="ingredient" data-color="#8BC34A">🥬 Lettuce</div>
+        <div class="ingredient" data-color="#E57373">🍅 Tomato</div>
+        <div class="ingredient" data-color="#FFEB3B">🧀 Cheese</div>
+        <div class="ingredient" data-color="#D50000">🥓 Bacon</div>
+        <div class="ingredient" data-color="#BCAAA4">🦃 Turkey</div>
+        <div class="ingredient" data-color="#689F38">🥒 Pickles</div>
 
-    <!-- Order Summary Modal -->
-    <div id="summary-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-4">
-        <div class="bg-white p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-md transform transition-all scale-100">
-            <h3 class="text-3xl font-extrabold mb-4 text-primary-green border-b pb-2">Your Sandwich Order</h3>
-            <p class="text-lg mb-4">Total Layers (excluding buns): <span id="layer-count" class="font-bold text-sandwich-red">0</span></p>
-            <ul id="summary-list" class="list-disc list-inside text-gray-700 space-y-1 ml-4 mb-6">
-                <!-- Summary list items will be inserted here -->
-            </ul>
-            <button id="close-modal-btn" class="w-full bg-primary-green text-white font-bold py-3 rounded-lg shadow-md hover:bg-green-600 transition duration-300">
-                Close & Keep Building
-            </button>
-        </div>
+        <button id="reset">Reset</button>
     </div>
 
-    <script>
-        // Global state and constants
-        const ingredientButtons = document.querySelectorAll('.ingredient-btn');
-        const sandwichStack = document.getElementById('sandwich-stack');
-        const bottomBun = document.getElementById('bottom-bun');
-        const resetBtn = document.getElementById('reset-sandwich-btn');
-        const showSummaryBtn = document.getElementById('show-summary-btn');
-        const modal = document.getElementById('summary-modal');
-        const closeModalBtn = document.getElementById('close-modal-btn');
-        const summaryList = document.getElementById('summary-list');
-        const layerCountSpan = document.getElementById('layer-count');
-        
-        let layers = [];
-        let totalHeight = 40; // Start with the height of the bottom bun
+    <!-- Sandwich Visual -->
+    <div class="sandwich-area">
+        <div id="sandwich">
+            <div class="top-bun"></div>
+            <div id="layers"></div>
+            <div class="bottom-bun"></div>
+        </div>
+    </div>
+</main>
 
-        const LAYER_HEIGHT = 30;
-        const BUN_HEIGHT = 50;
+<script>
+/* ---- Minimal JavaScript ---- */
 
-        /**
-         * Re-renders the entire sandwich stack from the current layers array.
-         */
-        function renderSandwich() {
-            // 1. Remove all existing layers (except the bottom bun)
-            const dynamicLayers = sandwichStack.querySelectorAll('.layer:not(.bottom-bun)');
-            dynamicLayers.forEach(layer => layer.remove());
+const ingredients = document.querySelectorAll('.ingredient');
+const layerBox = document.getElementById('layers');
+const resetBtn = document.getElementById('reset');
 
-            // 2. Initialize height and offset
-            totalHeight = bottomBun.offsetHeight; // Start with the bottom bun height
-            
-            // 3. Add dynamic layers back one by one, updating their position and height
-            layers.forEach((layerData) => {
-                const layerDiv = document.createElement('div');
-                layerDiv.className = 'layer absolute z-10 transition-all duration-300';
-                layerDiv.style.backgroundColor = layerData.color;
-                layerDiv.style.bottom = `${totalHeight}px`;
-                layerDiv.style.zIndex = totalHeight;
-                layerDiv.setAttribute('data-name', layerData.name);
-                
-                // Set the specific class for different layer types
-                if (layerData.name === 'Mayo' || layerData.name === 'Mustard') {
-                    // Sauces are thinner and spread wider
-                    layerDiv.style.height = '10px';
-                    layerDiv.style.width = '100%';
-                    layerDiv.style.borderRadius = '5px';
-                    layerDiv.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
-                    totalHeight += 10;
-                } else {
-                    layerDiv.style.height = `${LAYER_HEIGHT}px`;
-                    totalHeight += LAYER_HEIGHT;
-                }
+ingredients.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const color = btn.dataset.color;
 
-                sandwichStack.appendChild(layerDiv);
-            });
+        const layer = document.createElement('div');
+        layer.className = 'layer';
+        layer.style.background = color;
 
-            // 4. Create or update the top bun position
-            let topBun = document.getElementById('top-bun');
-            if (!topBun) {
-                topBun = document.createElement('div');
-                topBun.id = 'top-bun';
-                topBun.className = 'top-bun';
-                sandwichStack.appendChild(topBun);
-            }
-            // Position the top bun directly above the last layer
-            topBun.style.bottom = `${totalHeight}px`;
-            
-            // 5. Update stack container height for scrolling/centering purposes
-            sandwichStack.style.height = `${totalHeight + BUN_HEIGHT + 30}px`;
-        }
+        layerBox.appendChild(layer);
+    });
+});
 
-        /**
-         * Adds an ingredient to the sandwich stack.
-         * @param {string} name - The name of the ingredient.
-         * @param {string} color - The CSS color of the layer.
-         */
-        function addLayer(name, color) {
-            layers.push({ name, color });
-            renderSandwich();
-        }
+resetBtn.addEventListener('click', () => {
+    layerBox.innerHTML = '';
+});
 
-        /**
-         * Resets the sandwich to its initial state.
-         */
-        function resetSandwich() {
-            layers = [];
-            renderSandwich();
-            // Clear the summary list
-            summaryList.innerHTML = '';
-            layerCountSpan.textContent = '0';
-        }
+</script>
 
-        /**
-         * Handles the click event on ingredient buttons.
-         */
-        ingredientButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const name = button.getAttribute('data-ingredient');
-                const color = button.getAttribute('data-color');
-                addLayer(name, color);
-            });
-        });
-
-        /**
-         * Shows the Order Summary Modal.
-         */
-        function showSummary() {
-            // Populate the list
-            summaryList.innerHTML = '';
-            
-            // Count frequency of each ingredient
-            const ingredientCounts = layers.reduce((acc, layer) => {
-                acc[layer.name] = (acc[layer.name] || 0) + 1;
-                return acc;
-            }, {});
-
-            // Display counts
-            Object.entries(ingredientCounts).forEach(([name, count]) => {
-                const li = document.createElement('li');
-                li.className = 'flex justify-between items-center text-lg';
-                li.innerHTML = `<span class="font-medium">${name}</span> <span class="bg-gray-200 text-gray-800 text-xs font-semibold px-2 py-0.5 rounded-full">${count}x</span>`;
-                summaryList.appendChild(li);
-            });
-            
-            layerCountSpan.textContent = layers.length;
-
-            modal.classList.remove('hidden');
-        }
-
-        // --- Event Listeners ---
-        
-        // 1. Reset Button
-        resetBtn.addEventListener('click', resetSandwich);
-        
-        // 2. Summary Button (Order)
-        showSummaryBtn.addEventListener('click', showSummary);
-
-        // 3. Modal Close
-        closeModalBtn.addEventListener('click', () => {
-            modal.classList.add('hidden');
-        });
-        
-        // Close modal when clicking outside
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.add('hidden');
-            }
-        });
-
-        // Initialize the sandwich on load
-        window.onload = function() {
-            renderSandwich(); // Sets up the initial stack (just buns)
-        }
-
-    </script>
 </body>
 </html>
